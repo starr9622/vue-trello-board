@@ -1,32 +1,74 @@
 <template>
-  <div class="hello">
+  <div 
+    class="board"
+    :class="selectColor"
+  >
     <header>
      💫 To-Do List 💫
     </header>
-    <div class="list">
-      <p id="title">list</p>
-      <div class="card">
-        card
+    <main>
+      <div class="list">
+        <p id="title">list</p>
+        <div class="card hover">
+          card
+        </div>
+        <div class="addCard hover">
+          <span class="plus">+</span>
+          <span>Add anorder card</span>
+        </div>
       </div>
-      <div class="addCard">
-        Add anorder card
+      <div class="list">
+        <p id="title">list</p>
+        <div class="addCard hover">
+          <span class="plus">+</span>
+          <span>Add a card</span>
+        </div>
       </div>
+      <div class="AddList">
+        <span class="plus">+</span>
+        Add a List
+      </div>
+    </main>
+    <footer>
+      <label >change background Color</label>
+      <select class="colorSelect" v-model="selectColor">
+        <option v-for="color in backGroundColor" :key="color" :value="color">{{color}}</option>
+      </select>
+    </footer>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+    name: 'HelloWorld',
+    props: {
+      msg: String
+    },
+    data(){
+      return{
+        selectColor : "wheat",
+        backGroundColor : ["wheat", "salmon"]
+      };
+    },
+    mounted(){
+    },
+    methods:{
+      changeBackGround(){
+        let num = Math.floor(Math.random() * this.backGroundColor.length);
+        this.selectColor = this.backGroundColor[num];
+    }
   }
 }
 </script>
 
 <style scoped>
-.hello {
-  background-color: #42b983;
+.wheat{
+  background-color: wheat;
+}
+.salmon{
+  background-color: salmon;
+}
+.board {
   height: 100vh;
 }
 header{
@@ -45,7 +87,8 @@ p#title{
   font-weight: 800;
 }
 .list{
-  width: 15rem;
+  width: 18rem;
+  height: fit-content;
   background-color: #ececec;
   margin: 0.5rem;
   padding: 0.5rem;
@@ -54,11 +97,62 @@ p#title{
 }
 .card{
   padding: 0.5rem;
-  background-color: #e2e2e2;
+  background-color: #fff;
   border-radius: 0.2rem;
   margin-bottom: 0.5rem;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
 }
 .addCard{
-  
+  padding: 0.5rem;
+}
+.addCard span{
+  line-height: 1rem;
+}
+.plus{
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-right: .5rem;
+}
+.hover:hover{
+  background: rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+main{
+  display: flex;
+}
+.AddList{
+  width: 18rem;
+  background-color: rgba(255,255,255,0.3);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  margin: 0.5rem;
+  height: fit-content;
+}
+.AddList:hover{
+  background: rgba(255,255,255,0.4);
+  cursor: pointer;
+}
+.colorSelect{
+  background-color: rgba(0,0,0,0.3);
+  height: 1rem;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-weight: 100 !important;
+}
+footer label{
+  font-weight: 100;
+  margin-right: 1rem;
+}
+footer{
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+}
+select {
+  text-shadow: 0 0 0 #000 !important;
+}
+:focus {
+outline: 0;
 }
 </style>
