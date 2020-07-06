@@ -1,21 +1,41 @@
 <template>
   <div class="list bg-ececec box-shadow">
-      <p id="title">new List !</p>
-      <div class="card pointer">
-          card
+      <div class="title p-relative">
+          new List !
+            <div class="close">🗑</div>
       </div>
-      <div class="addCard pointer">
+      <component v-for="(item, index) in cards" :key="index" :is="item" @remove-card="removeCard(index)"></component>
+      <div class="addCard pointer" @click="addCard()">
           <span class="plus">+</span>
-          <span>Add another card</span>
+          <span>{{message}}</span>
       </div>
   </div>
 </template>
 
 <script>
+import card from "../Card/card.vue";
+
 export default {
+    components:{
+        card
+    },
+    watch:{
+      cards:function(){
+          this.message = this.cards.length > 0 ? "Add another card" : "Add a card";
+      }
+    },
     data(){
         return{
-
+            cards:[],
+            message: "Add a card"
+        }
+    },
+    methods:{
+        addCard(){
+            this.cards.push(card)
+        },
+        removeCard(index){
+            this.cards.splice(index,1);
         }
     }
 }

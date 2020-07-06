@@ -55,7 +55,9 @@ export default {
   background-color: salmon;
 }
 .board {
-  height: 100vh;
+  /* min-height: 100vh; */
+  position: relative;
+  min-height: 100%;
 }
 header{
   text-align: center;
@@ -64,5 +66,9 @@ header{
   padding: .5rem;
   background: rgba(255, 252, 252, 0.1);
   color: #fff;
+}
+main::-webkit-scrollbar {
+    width: 10px;
+    background: transparent;
 }
 </style>

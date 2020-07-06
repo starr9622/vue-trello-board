@@ -16,9 +16,7 @@ export default {
     },
     watch:{
       list:function(){
-        if (this.list.length > 0){
-          this.message = "Add another list";
-        }
+          this.message = this.list.length > 0 ? "Add another list" : "Add a list";
       }
     },
     data(){
@@ -36,11 +34,11 @@ export default {
 </script>
 
 <style>
-#title{
+.title{
   margin-top: 0;
   margin-bottom: 0.5rem;
   border-bottom: 1px solid #dfdfdf;
-  padding-bottom: 0.5rem;
+  padding: 0.5rem;
   font-weight: 800;
 }
 .list{
@@ -84,5 +82,19 @@ export default {
   font-size: 1.2rem;
   font-weight: 600;
   margin-right: .5rem;
+}
+.p-relative{
+  position: relative;
+}
+.close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0.3;
+  margin: .5rem;
+  line-height: 1.5rem;
+}
+.close:hover {
+  opacity: 1;
 }
 </style>
