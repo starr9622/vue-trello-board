@@ -9,7 +9,7 @@
     <main class="overflow-auto p-5">
       <List />
     </main>
-    <Footer :init="bgColor" @color="aa"/>
+    <Footer :init="bgColor" @color="changeBackground"/>
     </div>
 </template>
 
@@ -28,13 +28,13 @@ export default {
     },
     data(){
       return{
-        bgColor : 'wheat'
+        bgColor : 'salmon'
       };
     },
     mounted(){
     },
     methods:{
-      aa(val){
+      changeBackground(val){
         this.bgColor = val;
       }
     }

@@ -1,8 +1,8 @@
 <template>
   <div class="list bg-ececec box-shadow">
       <div class="title p-relative">
-          new List !
-            <div class="close">🗑</div>
+            <input type="text" v-model="listTitle" >
+            <div class="close" @click="removeList()">🗑</div>
       </div>
       <component v-for="(item, index) in cards" :key="index" :is="item" @remove-card="removeCard(index)"></component>
       <div class="addCard pointer" @click="addCard()">
@@ -27,7 +27,8 @@ export default {
     data(){
         return{
             cards:[],
-            message: "Add a card"
+            message: "Add a card",
+            listTitle: "new List !"
         }
     },
     methods:{
@@ -36,6 +37,9 @@ export default {
         },
         removeCard(index){
             this.cards.splice(index,1);
+        },
+        removeList(){
+            this.$emit("remove-list");
         }
     }
 }

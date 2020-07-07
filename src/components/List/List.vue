@@ -1,6 +1,6 @@
 <template>
     <div style="display : flex;">
-        <component v-for="(item, index) in list" :key="index" :is="item"></component>
+        <component v-for="(item, index) in list" :key="index" :is="item" @remove-list="removeList(index)"></component>
         <div class="list bg-ffffff03 pointer" @click="addlist()">
             <span class="plus">+</span>
             {{message}}
@@ -28,6 +28,9 @@ export default {
     methods:{
         addlist(){
             this.list.push(ListItem);
+        },
+        removeList(index){
+            this.list.splice(index,1);
         }
     }
 }
@@ -96,5 +99,16 @@ export default {
 }
 .close:hover {
   opacity: 1;
+}
+input, textarea{
+  border: 0;
+  background: transparent;
+  resize: none;
+}
+input:hover, textarea:hover{
+  border: 0;
+}
+input:focus, textarea:focus, select:focus{
+  outline: none;
 }
 </style>
