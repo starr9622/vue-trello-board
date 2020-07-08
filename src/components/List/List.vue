@@ -1,8 +1,7 @@
 <template>
     <div class="d-flex">
         <list-item 
-          v-for="(item, index) in list" 
-          :key="index" 
+          v-for="(item, index) in list" :index="index" v-bind:key="item.id"
           @remove-list="removeList(index)"
           @changeList="(v)=>changeItem(v,index)" 
           :list-item="list[index]">
@@ -24,6 +23,7 @@ export default {
       list:function(){
         this.message = this.list.length > 0 ? "Add another list" : "Add a list";
         localStorage.setItem("ListItem", JSON.stringify(this.list));
+        console.log("changed!!");
       }
     },
     data(){
@@ -38,12 +38,16 @@ export default {
     methods:{
         addlist(){
           this.list.push({
+            id: new Date().getTime(),
             listTitle : "new List !",
             cardItem : []
           });
         },
         removeList(index){
           this.list.splice(index,1);
+          this.$nextTick(()=>{
+            this.list = JSON.parse(localStorage.getItem("ListItem"));
+          });
         },
         changeItem(newVal, index){
           this.list[index] = newVal;

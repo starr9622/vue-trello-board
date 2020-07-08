@@ -4,7 +4,7 @@
         ref="textArea" 
         :style="{height : textareaHeight, width : '90%', 'max-height' : '10rem' }"
         v-model="message"></textarea>
-        <div class="close" @click="remove()">❌</div>
+        <div class="close pointer" @click="remove()">❌</div>
     </div>
 </template>
 

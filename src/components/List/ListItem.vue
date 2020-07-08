@@ -2,13 +2,13 @@
   <div class="list bg-ececec box-shadow">
       <div class="title p-relative d-flex">
             <input type="text" v-model="title" >
-            <div class="close" @click="removeList()">🗑</div>
+            <div class="close pointer" @click="removeList()">🗑</div>
       </div>
       <card 
         v-for="(item, index) in carditem" 
-        :key="index"
+        :key="item.id"
         @remove-card="removeCard(index)" 
-        :card-item="carditem[index]"
+        :card-item="carditem[index].message"
         @change-card="(v)=>changeCard(v, index)"
         ></card>
       <div class="addCard pointer" @click="addCard()">
@@ -51,22 +51,32 @@ export default {
             this.carditem = this.listItem.cardItem;
         },
         addCard(){
-            this.carditem.push("new card !");
+            this.carditem.push({
+                id : new Date().getTime(),
+                message : "new card !"
+            });
         },
         removeCard(index){
-            this.carditem.splice(index,1);
+            console.log(index);
+            this.$nextTick(()=>{
+                this.carditem.splice(index,1);
+            });
         },
         removeList(){
             this.$emit("remove-list");
         },
         changeEvent(){
             this.$emit("changeList", {
-              listTitle: this.title,
-              cardItem: this.carditem
+                id: this.listItem.id,
+                listTitle: this.title,
+                cardItem: this.carditem
             });
         },
         changeCard(val, index){
-            this.carditem[index] = val;
+            this.carditem[index] = {
+                id : this.carditem[index].id,
+                message: val
+            };
         }
     }
 }
