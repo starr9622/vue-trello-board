@@ -1,6 +1,12 @@
 <template>
-    <div style="display : flex;">
-        <component v-for="(item, index) in list" :key="index" :is="item" @remove-list="removeList(index)"></component>
+    <div class="d-flex">
+        <list-item 
+          v-for="(item, index) in list" 
+          :key="index" 
+          @remove-list="removeList(index)"
+          @changeList="(v)=>changeItem(v,index)" 
+          :list-item="list[index]">
+        </list-item>
         <div class="list bg-ffffff03 pointer" @click="addlist()">
             <span class="plus">+</span>
             {{message}}
@@ -16,27 +22,41 @@ export default {
     },
     watch:{
       list:function(){
-          this.message = this.list.length > 0 ? "Add another list" : "Add a list";
+        this.message = this.list.length > 0 ? "Add another list" : "Add a list";
+        localStorage.setItem("ListItem", JSON.stringify(this.list));
       }
     },
     data(){
         return{
-            list :[],
-            message: "Add a list"
+            message: "Add a list",
+            list: []
         }
+    },
+    created: function(){
+      if(localStorage.getItem("ListItem")) this.list = JSON.parse(localStorage.getItem("ListItem"));
     },
     methods:{
         addlist(){
-            this.list.push(ListItem);
+          this.list.push({
+            listTitle : "new List !",
+            cardItem : []
+          });
         },
         removeList(index){
-            this.list.splice(index,1);
+          this.list.splice(index,1);
+        },
+        changeItem(newVal, index){
+          this.list[index] = newVal;
+          localStorage.setItem("ListItem", JSON.stringify(this.list));
         }
     }
 }
 </script>
 
 <style>
+*{
+  font-family: sans-serif;
+}
 .title{
   margin-top: 0;
   margin-bottom: 0.5rem;
@@ -100,15 +120,7 @@ export default {
 .close:hover {
   opacity: 1;
 }
-input, textarea{
-  border: 0;
-  background: transparent;
-  resize: none;
-}
-input:hover, textarea:hover{
-  border: 0;
-}
-input:focus, textarea:focus, select:focus{
-  outline: none;
+.d-flex{
+  display: flex;
 }
 </style>

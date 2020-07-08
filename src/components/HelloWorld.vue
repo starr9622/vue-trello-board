@@ -4,7 +4,7 @@
     :class="bgColor"
   >
     <header>
-     💫 To-Do List 💫
+      <input type="text" v-model="title">
     </header>
     <main class="overflow-auto p-5">
       <List />
@@ -26,12 +26,19 @@ export default {
     props: {
       msg: String
     },
+    watch:{
+      title:function(){
+        localStorage.setItem('title', this.title);
+      }
+    },
     data(){
       return{
-        bgColor : 'salmon'
+        bgColor : 'salmon',
+        title : "💫 To-Do List 💫"
       };
     },
     mounted(){
+        this.title = localStorage.getItem("title") ? localStorage.getItem("title") : "💫 To-Do List 💫";
     },
     methods:{
       changeBackground(val){
@@ -41,7 +48,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .p-5{
   padding: 0.5rem;
 }
@@ -61,14 +68,27 @@ export default {
 }
 header{
   text-align: center;
-  font-size: 1.5rem;
-  font-weight: 100;
   padding: .5rem;
   background: rgba(255, 252, 252, 0.1);
-  color: #fff;
 }
 main::-webkit-scrollbar {
-    width: 10px;
-    background: transparent;
+  width: 10px;
+  background: transparent;
+}
+header > input{
+  font-size: 1.5rem;
+  text-align: center;
+  color: #fff;
+}
+input, textarea{
+  border: 0;
+  background: transparent;
+  resize: none;
+}
+input:hover, textarea:hover{
+  border: 0;
+}
+input:focus, textarea:focus, select:focus{
+  outline: none;
 }
 </style>
