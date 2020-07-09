@@ -6,7 +6,7 @@
     <header>
       <input type="text" v-model="title">
     </header>
-    <main class="overflow-auto p-5">
+    <main class="overflow-auto p-5 height-100">
       <List />
     </main>
     <Footer :init="bgColor" @color="changeBackground"/>
@@ -71,10 +71,6 @@ header{
   padding: .5rem;
   background: rgba(255, 252, 252, 0.1);
 }
-main::-webkit-scrollbar {
-  width: 10px;
-  background: transparent;
-}
 header > input{
   font-size: 1.5rem;
   text-align: center;
@@ -90,5 +86,8 @@ input:hover, textarea:hover{
 }
 input:focus, textarea:focus, select:focus{
   outline: none;
+}
+.height-100{
+  height: calc(100vh - 4rem);
 }
 </style>

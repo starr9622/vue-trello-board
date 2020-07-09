@@ -57,10 +57,7 @@ export default {
             });
         },
         removeCard(index){
-            console.log(index);
-            this.$nextTick(()=>{
-                this.carditem.splice(index,1);
-            });
+            this.carditem.splice(index,1);
         },
         removeList(){
             this.$emit("remove-list");
@@ -77,6 +74,7 @@ export default {
                 id : this.carditem[index].id,
                 message: val
             };
+            this.changeEvent();
         }
     }
 }

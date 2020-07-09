@@ -23,7 +23,6 @@ export default {
       list:function(){
         this.message = this.list.length > 0 ? "Add another list" : "Add a list";
         localStorage.setItem("ListItem", JSON.stringify(this.list));
-        console.log("changed!!");
       }
     },
     data(){
