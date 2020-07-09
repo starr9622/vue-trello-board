@@ -1,4 +1,5 @@
 # vue-trello
+> localstoge를 사용하여 구현해 본 간단한 트렐로입니다😂
 
 ## Sample
 https://starr9622.github.io/vue-trello/
