@@ -6,7 +6,10 @@
       v-bind:key="item.id"
       @remove-list="removeList(index)"
       @changeList="(v) => changeItem(v, index)"
+      @changeTest="changeTest"
       :list-item="list[index]"
+      :card="card.filter((card) => card.list === item.id)"
+      @changeCard="cardHandler"
     >
     </list-item>
     <div class="list bg-ffffff03 pointer" @click="addlist()">
@@ -25,36 +28,58 @@ export default {
   watch: {
     list: function () {
       this.message = this.list.length > 0 ? "Add another list" : "Add a list";
-      localStorage.setItem("ListItem", JSON.stringify(this.list));
+      // localStorage.setItem("ListItem", JSON.stringify(this.list));
     },
   },
   data() {
     return {
       message: "Add a list",
       list: [],
+      card: [],
     };
   },
-  created: function () {
-    if (localStorage.getItem("ListItem"))
-      this.list = JSON.parse(localStorage.getItem("ListItem"));
+  created() {
+    // if (localStorage.getItem("ListItem"))
+    // this.list = JSON.parse(localStorage.getItem("ListItem"));
   },
   methods: {
     addlist() {
       this.list.push({
         id: new Date().getTime(),
         listTitle: "new List !",
-        cardItem: [],
+        // cardItem: [],
       });
     },
     removeList(index) {
       this.list.splice(index, 1);
-      this.$nextTick(() => {
-        this.list = JSON.parse(localStorage.getItem("ListItem"));
-      });
+      // this.$nextTick(() => {
+      //   this.list = JSON.parse(localStorage.getItem("ListItem"));
+      // });
     },
     changeItem(newVal, index) {
       this.list[index] = newVal;
-      localStorage.setItem("ListItem", JSON.stringify(this.list));
+      // localStorage.setItem("ListItem", JSON.stringify(this.list));
+    },
+
+    changeTest(item) {
+      let moveItem = this.card.find((i) => i.id === parseInt(item.card));
+      this.$nextTick(() => {
+        let index = this.card.findIndex((v) => v === moveItem);
+        moveItem.list = parseInt(item.list);
+        this.card.splice(index, 1);
+        this.card.push({ ...moveItem });
+      });
+    },
+
+    cardHandler(updateData) {
+      updateData.forEach((data) => {
+        let exist = this.card.find((c) => c.id === data.id);
+        if (exist) {
+          exist.message = data.message;
+        } else {
+          this.card.push(data);
+        }
+      });
     },
   },
 };

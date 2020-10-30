@@ -9,7 +9,7 @@
         v-for="(item, index) in carditem"
         :key="item.id"
         draggable="true"
-        @dragstart="dragStartHandler($event, item.id)"
+        @dragstart="dragStartHandler($event, item)"
       >
         <card
           @remove-card="removeCard(index)"
@@ -29,14 +29,19 @@
 import card from "../Card/card.vue";
 
 export default {
-  props: ["listItem"],
+  props: ["listItem", "card"],
   components: {
     card,
+  },
+  computed: {
+    carditem: function () {
+      return this.card;
+    },
   },
   watch: {
     carditem: function () {
       this.message =
-        this.listItem.cardItem.length > 0 ? "Add another card" : "Add a card";
+        this.carditem.length > 0 ? "Add another card" : "Add a card";
       this.changeEvent();
     },
     title: function () {
@@ -47,7 +52,6 @@ export default {
     return {
       message: "Add a card",
       title: "",
-      carditem: [],
       dropitem: "",
     };
   },
@@ -57,13 +61,14 @@ export default {
   methods: {
     init() {
       this.title = this.listItem.listTitle;
-      this.carditem = this.listItem.cardItem;
     },
     addCard() {
       this.carditem.push({
         id: new Date().getTime(),
         message: "new card !",
+        list: this.listItem.id,
       });
+      this.$emit("changeCard", this.carditem);
     },
     removeCard(index) {
       this.carditem.splice(index, 1);
@@ -72,31 +77,27 @@ export default {
       this.$emit("remove-list");
     },
     changeEvent() {
-      this.$emit("changeList", {
-        id: this.listItem.id,
-        listTitle: this.title,
-        cardItem: this.carditem,
-      });
+      this.$emit("changeCard", this.carditem);
     },
     changeCard(val, index) {
       this.carditem[index] = {
         id: this.carditem[index].id,
         message: val,
+        list: this.listItem.id,
       };
       this.changeEvent();
     },
     dropHandler(e) {
-      let item = e.dataTransfer.getData("dragItem");
-      let beforelist = e.dataTransfer.getData("dragstartList");
-      console.log(item, beforelist);
-      console.log(e);
+      this.$emit("changeTest", {
+        card: e.dataTransfer.getData("dragItem"),
+        list: this.listItem.id,
+      });
     },
 
-    dragStartHandler(e, index) {
+    dragStartHandler(e, item) {
       e.dataTransfer.dropEffect = "move";
       e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("dragItem", index);
-      e.dataTransfer.setData("dragstartList", this.listItem.id);
+      e.dataTransfer.setData("dragItem", item.id);
     },
   },
 };
@@ -104,5 +105,6 @@ export default {
 
 <style scoped>
 .cardDropZone {
+  padding: 1rem;
 }
 </style>
