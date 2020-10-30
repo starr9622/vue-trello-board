@@ -4,12 +4,19 @@
       <input type="text" v-model="title" />
       <div class="close pointer" @click="removeList()">🗑</div>
     </div>
-    <div @drop="dropHandler" @dragover.prevent class="cardDropZone">
+    <div
+      @drop="dropHandler(-1, $event)"
+      @dragover.prevent
+      @dragenter.prevent
+      class="cardDropZone"
+    >
       <div
+        class="itemHandler"
         v-for="(item, index) in carditem"
         :key="item.id"
         draggable="true"
         @dragstart="dragStartHandler($event, item)"
+        @drop="dropHandler(index, $event)"
       >
         <card
           @remove-card="removeCard(index)"
@@ -67,6 +74,7 @@ export default {
         id: new Date().getTime(),
         message: "new card !",
         list: this.listItem.id,
+        order: this.carditem.length,
       });
       this.$emit("changeCard", this.carditem);
     },
@@ -81,16 +89,16 @@ export default {
     },
     changeCard(val, index) {
       this.carditem[index] = {
-        id: this.carditem[index].id,
+        ...this.carditem[index],
         message: val,
-        list: this.listItem.id,
       };
       this.changeEvent();
     },
-    dropHandler(e) {
-      this.$emit("changeTest", {
+    dropHandler(to, e) {
+      this.$emit("changeItem", {
         card: e.dataTransfer.getData("dragItem"),
         list: this.listItem.id,
+        order: to,
       });
     },
 
@@ -98,6 +106,8 @@ export default {
       e.dataTransfer.dropEffect = "move";
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("dragItem", item.id);
+      e.dataTransfer.setData("target", e.target);
+      this.dropitem = e.target;
     },
   },
 };
@@ -105,6 +115,9 @@ export default {
 
 <style scoped>
 .cardDropZone {
-  padding: 1rem;
+  padding: 0.5rem;
+}
+.itemHandler {
+  padding: 0.5rem;
 }
 </style>

@@ -5,10 +5,13 @@
       :index="index"
       v-bind:key="item.id"
       @remove-list="removeList(index)"
-      @changeList="(v) => changeItem(v, index)"
-      @changeTest="changeTest"
+      @changeItem="changeItem"
       :list-item="list[index]"
-      :card="card.filter((card) => card.list === item.id)"
+      :card="
+        card
+          .filter((card) => card.list === item.id)
+          .sort((a, b) => a.order - b.order)
+      "
       @changeCard="cardHandler"
     >
     </list-item>
@@ -38,39 +41,35 @@ export default {
       card: [],
     };
   },
-  created() {
-    // if (localStorage.getItem("ListItem"))
-    // this.list = JSON.parse(localStorage.getItem("ListItem"));
-  },
   methods: {
     addlist() {
       this.list.push({
         id: new Date().getTime(),
         listTitle: "new List !",
-        // cardItem: [],
       });
     },
     removeList(index) {
       this.list.splice(index, 1);
-      // this.$nextTick(() => {
-      //   this.list = JSON.parse(localStorage.getItem("ListItem"));
-      // });
     },
-    changeItem(newVal, index) {
-      this.list[index] = newVal;
-      // localStorage.setItem("ListItem", JSON.stringify(this.list));
-    },
-
-    changeTest(item) {
+    changeItem(item) {
+      const changeList = parseInt(item.list);
+      if (item.order === -1 && this.card.find((c) => c.list === changeList)) {
+        return;
+      }
       let moveItem = this.card.find((i) => i.id === parseInt(item.card));
+      let orderList = this.card.filter((c) => c.list === changeList);
       this.$nextTick(() => {
-        let index = this.card.findIndex((v) => v === moveItem);
-        moveItem.list = parseInt(item.list);
-        this.card.splice(index, 1);
-        this.card.push({ ...moveItem });
+        moveItem.list = changeList;
+        orderList.forEach((list) => {
+          let orderItem = this.card.find((c) => c.id === list.id);
+          orderItem.order =
+            orderItem.order >= item.order
+              ? orderItem.order + 1
+              : orderItem.order;
+        });
+        moveItem.order = item.order;
       });
     },
-
     cardHandler(updateData) {
       updateData.forEach((data) => {
         let exist = this.card.find((c) => c.id === data.id);
