@@ -1,14 +1,12 @@
 <template>
-  <Trello />
+  <trello />
 </template>
 
 <script>
-import Trello from "@/components/Trello.vue";
-
 export default {
   name: "Home",
   components: {
-    Trello,
+    Trello: () => import("@/components/Trello"),
   },
 };
 </script>

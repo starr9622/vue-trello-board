@@ -7,36 +7,29 @@
       @remove-list="removeList(index)"
       @changeItem="changeItem"
       :list-item="list[index]"
-      :card="
-        card
-          .filter((card) => card.list === item.id)
-          .sort((a, b) => a.order - b.order)
-      "
+      :cardlist="item.id | cardFilter(card)"
       @changeCard="cardHandler"
+      @removeCard="cardRemove"
     >
     </list-item>
     <div class="list bg-ffffff03 pointer" @click="addlist()">
-      <span class="plus">+</span>
-      {{ message }}
+      <span class="plus">{{ list | messageFilter }}</span>
     </div>
   </div>
 </template>
 
 <script>
-import ListItem from "./ListItem.vue";
 export default {
   components: {
-    ListItem,
+    "list-item": () => import("./ListItem.vue"),
   },
-  watch: {
-    list: function () {
-      this.message = this.list.length > 0 ? "Add another list" : "Add a list";
-      // localStorage.setItem("ListItem", JSON.stringify(this.list));
-    },
+  filters: {
+    cardFilter: (id, card) =>
+      card.filter((c) => c.list === id).sort((a, b) => a.order - b.order),
+    messageFilter: (list) => (list.length ? "Add another list" : "Add a list"),
   },
   data() {
     return {
-      message: "Add a list",
       list: [],
       card: [],
     };
@@ -80,11 +73,15 @@ export default {
         }
       });
     },
+    cardRemove(removeData) {
+      let remove = this.card.findIndex((c) => c.id === removeData.id);
+      this.card.splice(remove, 1);
+    },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 * {
   font-family: sans-serif;
 }
@@ -133,9 +130,12 @@ export default {
   line-height: 1rem;
 }
 .plus {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-right: 0.5rem;
+  &::before {
+    content: "+";
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+  }
 }
 .p-relative {
   position: relative;

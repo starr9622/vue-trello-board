@@ -1,39 +1,36 @@
 <template>
-    <div class="card pointer p-relative d-flex">
-        <textarea 
-        ref="textArea" 
-        :style="{height : textareaHeight, width : '90%', 'max-height' : '10rem' }"
-        v-model="message"></textarea>
-        <div class="close pointer" @click="remove()">❌</div>
-    </div>
+  <div class="card pointer p-relative d-flex">
+    <textarea
+      ref="textArea"
+      :style="{ height: textareaHeight, width: '90%', 'max-height': '10rem' }"
+      :value="todoMessage"
+      @input="cardinput"
+      placeholder="Write a to do!"
+    ></textarea>
+    <div class="close pointer" @click="remove">❌</div>
+  </div>
 </template>
 
 <script>
 export default {
-    props:["cardItem"],
-    data(){
-        return{
-            textareaHeight : "1rem",
-            message : '',
-        }
+  props: ["todoMessage"],
+  data() {
+    return {
+      textareaHeight: "1rem",
+    };
+  },
+  methods: {
+    remove() {
+      return this.$emit("remove-card", this);
     },
-    watch:{
-        message(){
-            if(this.$refs.textArea.scrollHeight > this.$refs.textArea.clientHeight){
-                this.$nextTick(()=>{
-                    this.textareaHeight= this.$refs.textArea.scrollHeight + "px";
-                })
-            }
-            this.$emit("change-card", this.message);
-        }
+    cardinput($event) {
+      if (this.$refs.textArea.scrollHeight > this.$refs.textArea.clientHeight) {
+        this.$nextTick(() => {
+          this.textareaHeight = this.$refs.textArea.scrollHeight + "px";
+        });
+      }
+      this.$emit("change-card", $event.target.value);
     },
-    created(){
-        this.message = this.cardItem;
-    },
-    methods:{
-        remove(){
-            return this.$emit('remove-card',this);
-        }
-    }
-}
+  },
+};
 </script>

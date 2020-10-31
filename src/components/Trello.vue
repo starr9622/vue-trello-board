@@ -4,21 +4,24 @@
       <input type="text" v-model="title" />
     </header>
     <main class="overflow-auto p-5 height-100">
-      <List />
+      <list />
     </main>
-    <Footer :init="bgColor" @color="changeBackground" />
+    <change-background
+      :init="bgColor"
+      @color="changeBackground"
+    ></change-background>
   </div>
 </template>
 
 <script>
-import List from "./List/List.vue";
-import Footer from "./Footer/changeBg.vue";
+import List from "./List/List";
+import ChangeBackground from "./Footer/changeBg";
 
 export default {
-  name: "Trello",
+  name: "trello",
   components: {
     List,
-    Footer,
+    ChangeBackground,
   },
   props: {
     msg: String,

@@ -19,38 +19,34 @@
         @drop="dropHandler(index, $event)"
       >
         <card
-          @remove-card="removeCard(index)"
-          :card-item="carditem[index].message"
+          @remove-card="removeCard(item)"
+          :todo-message="carditem[index].message"
           @change-card="(v) => changeCard(v, index)"
         ></card>
       </div>
     </div>
     <div class="addCard pointer" @click="addCard()">
-      <span class="plus">+</span>
-      <span>{{ message }}</span>
+      <span class="plus">{{ carditem | plusMessageFilter }}</span>
     </div>
   </div>
 </template>
 
 <script>
-import card from "../Card/card.vue";
-
 export default {
-  props: ["listItem", "card"],
+  props: ["listItem", "cardlist"],
   components: {
-    card,
+    card: () => import("../Card/Card"),
   },
   computed: {
-    carditem: function () {
-      return this.card;
+    carditem() {
+      return this.cardlist;
     },
   },
+  filters: {
+    plusMessageFilter: (cardlist) =>
+      cardlist.length ? "Add another card" : "Add a card",
+  },
   watch: {
-    carditem: function () {
-      this.message =
-        this.carditem.length > 0 ? "Add another card" : "Add a card";
-      this.changeEvent();
-    },
     title: function () {
       this.changeEvent();
     },
@@ -72,14 +68,14 @@ export default {
     addCard() {
       this.carditem.push({
         id: new Date().getTime(),
-        message: "new card !",
+        message: "",
         list: this.listItem.id,
         order: this.carditem.length,
       });
       this.$emit("changeCard", this.carditem);
     },
-    removeCard(index) {
-      this.carditem.splice(index, 1);
+    removeCard(item) {
+      this.$emit("removeCard", item);
     },
     removeList() {
       this.$emit("remove-list");
