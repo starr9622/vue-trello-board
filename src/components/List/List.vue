@@ -28,10 +28,17 @@ export default {
       card.filter((c) => c.list === id).sort((a, b) => a.order - b.order),
     messageFilter: (list) => (list.length ? "Add another list" : "Add a list"),
   },
+  watch: {
+    orderSort() {
+      if (this.orderSort)
+        this.list.forEach(({ id }) => this.sortingCardOrder(id));
+    },
+  },
   data() {
     return {
       list: [],
       card: [],
+      orderSort: false,
     };
   },
   methods: {
@@ -50,17 +57,25 @@ export default {
         return;
       }
       let moveItem = this.card.find((i) => i.id === parseInt(item.card));
-      let orderList = this.card.filter((c) => c.list === changeList);
+      let listIds = this.card
+        .filter((c) => c.list === changeList)
+        .map((f) => f.id);
       this.$nextTick(() => {
-        moveItem.list = changeList;
-        orderList.forEach((list) => {
-          let orderItem = this.card.find((c) => c.id === list.id);
+        if (moveItem.list !== changeList) {
+          moveItem.list = changeList;
+          moveItem.order = listIds.length - 1;
+        }
+        listIds.forEach((id) => {
+          let orderItem = this.card.find((c) => c.id === id);
           orderItem.order =
-            orderItem.order >= item.order
+            moveItem.order > item.order && orderItem.order >= item.order
               ? orderItem.order + 1
+              : orderItem.order <= item.order
+              ? orderItem.order - 1
               : orderItem.order;
         });
         moveItem.order = item.order;
+        this.orderSort = true;
       });
     },
     cardHandler(updateData) {
@@ -76,6 +91,18 @@ export default {
     cardRemove(removeData) {
       let remove = this.card.findIndex((c) => c.id === removeData.id);
       this.card.splice(remove, 1);
+    },
+
+    sortingCardOrder(listId) {
+      let cardIds = this.card
+        .filter((c) => c.list === listId)
+        .sort((a, b) => a.order - b.order)
+        .map((f) => f.id);
+      cardIds.forEach((id, index) => {
+        let card = this.card.find((c) => c.id === id);
+        card.order = index;
+      });
+      this.orderSort = false;
     },
   },
 };
