@@ -7,6 +7,10 @@ export default new Vuex.Store({
   state: {
     list: [],
     card: [],
+    setting: {
+      title: "To-Do App",
+      color: "#3775a4",
+    },
   },
   getters: {
     getList: function(state) {
@@ -19,6 +23,12 @@ export default new Vuex.Store({
     },
     popLists: function(state, payload) {
       state.list.splice(payload.value, 1);
+    },
+    setBgColor(state, color) {
+      state.setting.color = color;
+    },
+    setTitle(state, title) {
+      state.setting.title = title;
     },
   },
   actions: {},
