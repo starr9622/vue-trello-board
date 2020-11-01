@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     list: [],
+    card: [],
   },
   getters: {
     getList: function(state) {
