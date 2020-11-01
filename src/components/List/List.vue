@@ -2,16 +2,15 @@
   <div class="board-wrap">
     <list-item
       v-for="(item, index) in list"
-      :index="index"
-      v-bind:key="item.id"
+      :key="item.id"
+      :listItem="list[index]"
+      :cardList="item.id | cardFilter(card)"
       @remove-list="removeList(item.id)"
-      @changeItem="changeItem"
-      :list-item="list[index]"
-      :cardlist="item.id | cardFilter(card)"
-      @changeCard="cardHandler"
-      @removeCard="cardRemove"
-    >
-    </list-item>
+      @change-order="changeOrder"
+      @change-card="cardHandler"
+      @remove-card="cardRemove"
+      @change-board-title="(title) => titleChange(item.id, title)"
+    />
     <div class="list bg-ececec box-shadow pointer" @click="addlist()">
       <span class="plus">{{ list | messageFilter }}</span>
     </div>
@@ -45,13 +44,13 @@ export default {
     addlist() {
       this.list.push({
         id: new Date().getTime(),
-        listTitle: "new List !",
+        boardTitle: "new List !",
       });
     },
     removeList(id) {
       this.list = this.list.filter((item) => item.id != id);
     },
-    changeItem(item) {
+    changeOrder(item) {
       const changeList = parseInt(item.list);
       if (item.order === -1 && this.card.find((c) => c.list === changeList)) {
         return;
@@ -60,23 +59,21 @@ export default {
       let listIds = this.card
         .filter((c) => c.list === changeList)
         .map((f) => f.id);
-      this.$nextTick(() => {
-        if (moveItem.list !== changeList) {
-          moveItem.list = changeList;
-          moveItem.order = listIds.length - 1;
-        }
-        listIds.forEach((id) => {
-          let orderItem = this.card.find((c) => c.id === id);
-          orderItem.order =
-            moveItem.order > item.order && orderItem.order >= item.order
-              ? orderItem.order + 1
-              : orderItem.order <= item.order
-              ? orderItem.order - 1
-              : orderItem.order;
-        });
-        moveItem.order = item.order;
-        this.orderSort = true;
+      if (moveItem.list !== changeList) {
+        moveItem.list = changeList;
+        moveItem.order = listIds.length - 1;
+      }
+      listIds.forEach((id) => {
+        let orderItem = this.card.find((c) => c.id === id);
+        orderItem.order =
+          moveItem.order > item.order && orderItem.order >= item.order
+            ? orderItem.order + 1
+            : orderItem.order <= item.order
+            ? orderItem.order - 1
+            : orderItem.order;
       });
+      moveItem.order = item.order;
+      this.orderSort = true;
     },
     cardHandler(updateData) {
       updateData.forEach((data) => {
@@ -93,6 +90,7 @@ export default {
     },
 
     sortingCardOrder(listId) {
+      console.log("order");
       let cardIds = this.card
         .filter((c) => c.list === listId)
         .sort((a, b) => a.order - b.order)
@@ -102,6 +100,11 @@ export default {
         card.order = index;
       });
       this.orderSort = false;
+    },
+
+    titleChange(id, title) {
+      let board = this.list.find((b) => b.id === id);
+      board.boardTitle = title;
     },
   },
 };

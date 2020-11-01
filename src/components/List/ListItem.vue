@@ -1,7 +1,7 @@
 <template>
   <div class="list bg-ececec box-shadow">
     <div class="title p-relative d-flex">
-      <input type="text" v-model="title" />
+      <input type="text" v-model="title" @input="changeBoardTitle" />
       <div class="close pointer" @click="removeList()">🗑</div>
     </div>
     <div
@@ -33,38 +33,26 @@
 
 <script>
 export default {
-  props: ["listItem", "cardlist"],
+  props: ["listItem", "cardList"],
   components: {
     card: () => import("../Card/Card"),
   },
-  computed: {
-    carditem() {
-      return this.cardlist;
-    },
-  },
   filters: {
-    plusMessageFilter: (cardlist) =>
-      cardlist.length ? "Add another card" : "Add a card",
+    plusMessageFilter: (carditem) =>
+      carditem.length ? "Add another card" : "Add a card",
   },
   watch: {
-    title: function () {
-      this.changeEvent();
+    cardList: function () {
+      this.carditem = this.cardList;
     },
   },
   data() {
     return {
-      message: "Add a card",
-      title: "",
-      dropitem: "",
+      title: this.listItem.boardTitle,
+      carditem: this.cardList,
     };
   },
-  created() {
-    this.init();
-  },
   methods: {
-    init() {
-      this.title = this.listItem.listTitle;
-    },
     addCard() {
       this.carditem.push({
         id: new Date().getTime(),
@@ -72,16 +60,16 @@ export default {
         list: this.listItem.id,
         order: this.carditem.length,
       });
-      this.$emit("changeCard", this.carditem);
+      this.changeEvent();
     },
     removeCard(item) {
-      this.$emit("removeCard", item);
+      this.$emit("remove-card", item);
     },
     removeList() {
       this.$emit("remove-list");
     },
     changeEvent() {
-      this.$emit("changeCard", this.carditem);
+      this.$emit("change-card", this.carditem);
     },
     changeCard(val, index) {
       this.carditem[index] = {
@@ -91,7 +79,7 @@ export default {
       this.changeEvent();
     },
     dropHandler(to, e) {
-      this.$emit("changeItem", {
+      this.$emit("change-order", {
         card: e.dataTransfer.getData("dragItem"),
         list: this.listItem.id,
         order: to,
@@ -103,7 +91,10 @@ export default {
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("dragItem", item.id);
       e.dataTransfer.setData("target", e.target);
-      this.dropitem = e.target;
+    },
+
+    changeBoardTitle() {
+      this.$emit("change-board-title", this.title);
     },
   },
 };

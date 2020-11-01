@@ -3,7 +3,7 @@
     <textarea
       ref="textArea"
       :style="{ height: textareaHeight, width: '90%', 'max-height': '10rem' }"
-      :value="todoMessage"
+      v-model="message"
       @input="cardinput"
       placeholder="Write a to do!"
     ></textarea>
@@ -17,19 +17,20 @@ export default {
   data() {
     return {
       textareaHeight: "1rem",
+      message: this.todoMessage,
     };
   },
   methods: {
     remove() {
       return this.$emit("remove-card", this);
     },
-    cardinput($event) {
+    cardinput() {
       if (this.$refs.textArea.scrollHeight > this.$refs.textArea.clientHeight) {
         this.$nextTick(() => {
           this.textareaHeight = this.$refs.textArea.scrollHeight + "px";
         });
       }
-      this.$emit("change-card", $event.target.value);
+      this.$emit("change-card", this.message);
     },
   },
 };
