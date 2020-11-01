@@ -1,8 +1,8 @@
-# vue-trello
-> localstoge를 사용하여 구현해 본 간단한 트렐로입니다😂
+# vue-trello-board
+> localstoge를 사용하여 구현해 본 간단한 트렐로보드입니다😂
 
 ## Sample
-https://starr9622.github.io/vue-trello/
+https://starr9622.github.io/vue-trello-board/
 
 
 ## Project setup
