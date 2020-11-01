@@ -1,10 +1,10 @@
 <template>
-  <div class="d-flex">
+  <div class="board-wrap">
     <list-item
       v-for="(item, index) in list"
       :index="index"
       v-bind:key="item.id"
-      @remove-list="removeList(index)"
+      @remove-list="removeList(item.id)"
       @changeItem="changeItem"
       :list-item="list[index]"
       :cardlist="item.id | cardFilter(card)"
@@ -12,7 +12,7 @@
       @removeCard="cardRemove"
     >
     </list-item>
-    <div class="list bg-ffffff03 pointer" @click="addlist()">
+    <div class="list bg-ececec box-shadow pointer" @click="addlist()">
       <span class="plus">{{ list | messageFilter }}</span>
     </div>
   </div>
@@ -48,8 +48,8 @@ export default {
         listTitle: "new List !",
       });
     },
-    removeList(index) {
-      this.list.splice(index, 1);
+    removeList(id) {
+      this.list = this.list.filter((item) => item.id != id);
     },
     changeItem(item) {
       const changeList = parseInt(item.list);
@@ -89,8 +89,7 @@ export default {
       });
     },
     cardRemove(removeData) {
-      let remove = this.card.findIndex((c) => c.id === removeData.id);
-      this.card.splice(remove, 1);
+      this.card = this.card.filter((item) => item.id !== removeData.id);
     },
 
     sortingCardOrder(listId) {
@@ -109,6 +108,15 @@ export default {
 </script>
 
 <style lang="scss">
+.board-wrap {
+  display: grid;
+  column-gap: 1rem;
+  align-items: flex-start;
+  grid-auto-flow: column;
+  grid-auto-columns: 18rem;
+  grid-template-columns: repeat(5, 18rem);
+  height: 100%;
+}
 * {
   font-family: sans-serif;
 }
@@ -120,11 +128,6 @@ export default {
   font-weight: 800;
 }
 .list {
-  width: 18rem;
-  min-width: 18rem;
-  height: fit-content;
-  margin: 0.5rem;
-  padding: 0.5rem;
   border-radius: 0.25rem;
 }
 .box-shadow {

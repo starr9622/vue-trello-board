@@ -1,14 +1,16 @@
 <template>
-  <div class="board" :class="bgColor">
+  <div class="main-wrap" :style="{ 'background-color': bgColor }">
     <header>
       <input type="text" v-model="title" />
     </header>
-    <main class="overflow-auto p-5 height-100">
-      <list />
+    <main>
+      <div class="trello-wrap">
+        <list />
+      </div>
     </main>
     <change-background
-      :init="bgColor"
-      @color="changeBackground"
+      :color="bgColor"
+      @changeColor="(val) => (bgColor = val)"
     ></change-background>
   </div>
 </template>
@@ -33,7 +35,7 @@ export default {
   },
   data() {
     return {
-      bgColor: "salmon",
+      bgColor: "#3775a4",
       title: "💫 To-Do List 💫",
     };
   },
@@ -42,36 +44,50 @@ export default {
       ? localStorage.getItem("title")
       : "💫 To-Do List 💫";
   },
-  methods: {
-    changeBackground(val) {
-      this.bgColor = val;
-    },
-  },
 };
 </script>
 
-<style>
+<style lang="scss">
+.trello-wrap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  margin: 1rem;
+  &::-webkit-scrollbar {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5rem;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+}
+main {
+  position: relative;
+}
+
 .p-5 {
   padding: 0.5rem;
 }
-.overflow-auto {
-  overflow: auto;
-}
-.wheat {
-  background-color: wheat;
-}
-.salmon {
-  background-color: salmon;
-}
-.board {
-  /* min-height: 100vh; */
+.main-wrap {
   position: relative;
   min-height: 100%;
+  display: grid;
+  grid-template-rows: 3rem auto 3rem;
 }
 header {
   text-align: center;
   padding: 0.5rem;
-  background: rgba(255, 252, 252, 0.1);
+  background: rgba(0, 0, 0, 0.1);
 }
 header > input {
   font-size: 1.5rem;
@@ -94,6 +110,6 @@ select:focus {
   outline: none;
 }
 .height-100 {
-  height: calc(100vh - 4rem);
+  height: 100%;
 }
 </style>

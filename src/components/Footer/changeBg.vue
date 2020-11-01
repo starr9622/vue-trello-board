@@ -1,54 +1,29 @@
 <template>
-    <footer>
-        <label >change background Color</label>
-        <select class="colorSelect" v-model="selectColor">
-            <option v-for="color in backGroundColor" :key="color" :value="color">{{color}}</option>
-        </select>
-    </footer>
+  <footer>
+    <label>change background Color</label>
+    <input type="color" :value="color" @input="changeColor" />
+  </footer>
 </template>
 
 <script>
 export default {
-    props:['init'],
-    watch:{
-        selectColor: function(val){
-            this.$emit("color", val);
-        }
+  props: ["color"],
+
+  methods: {
+    changeColor($event) {
+      this.$emit("changeColor", $event.target.value);
     },
-    data(){
-        return {
-            selectColor : "",
-            backGroundColor : ["wheat", "salmon"]
-        }
-    },
-    created(){
-        this.selectColor = this.init
-    }
-}
+  },
+};
 </script>
 
 <style scoped>
-.colorSelect{
-  background-color: rgba(0,0,0,0.3);
-  height: 1rem;
-  color: white;
-  border: none;
-  border-radius: 0.25rem;
-  font-weight: 100 !important;
-}
-footer label{
-  font-weight: 100;
+footer label {
   margin-right: 1rem;
+  color: #666;
 }
-footer{
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-}
-select {
-  text-shadow: 0 0 0 #000 !important;
-}
-:focus {
-outline: 0;
+footer {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem;
 }
 </style>
