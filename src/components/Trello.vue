@@ -59,9 +59,11 @@ export default {
   margin: 1rem;
   &::-webkit-scrollbar {
     background-color: transparent;
+    height: 0.5rem;
   }
   &::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 5rem;
   }
   &::-webkit-scrollbar-thumb:hover {
