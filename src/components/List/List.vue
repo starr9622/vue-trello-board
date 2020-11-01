@@ -1,6 +1,6 @@
 <template>
   <div class="board-wrap">
-    <list-item
+    <board
       v-for="(item, index) in list"
       :key="item.id"
       :listItem="list[index]"
@@ -10,7 +10,7 @@
       @change-card="cardHandler"
       @remove-card="cardRemove"
       @change-board-title="(title) => titleChange(item.id, title)"
-    />
+    ></board>
     <div class="list bg-ececec box-shadow pointer" @click="addlist()">
       <span class="plus">{{ list | messageFilter }}</span>
     </div>
@@ -20,7 +20,7 @@
 <script>
 export default {
   components: {
-    "list-item": () => import("./ListItem.vue"),
+    board: () => import("./board.vue"),
   },
   filters: {
     cardFilter: (id, card) =>
@@ -90,7 +90,6 @@ export default {
     },
 
     sortingCardOrder(listId) {
-      console.log("order");
       let cardIds = this.card
         .filter((c) => c.list === listId)
         .sort((a, b) => a.order - b.order)
