@@ -1,10 +1,6 @@
 <template>
   <div class="board">
-    <list-title
-      :boardTitle="listItem.boardTitle"
-      @change-board-title="(v) => changeBoardTitle(v)"
-      @remove-list="removeList"
-    ></list-title>
+    <list-title :board="listItem"></list-title>
     <div
       @drop="dropHandler(-1, $event)"
       @dragover.prevent
@@ -28,18 +24,27 @@
     </div>
     <add-button
       :message="carditem | plusMessageFilter"
-      @addEvent="addCard"
+      @addEvent="addCard(listItem.id)"
     ></add-button>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   props: ["listItem", "cardList"],
   components: {
     card: () => import("../Card/Card"),
     addButton: () => import("../Button/Add"),
     listTitle: () => import("./ListTitle"),
+  },
+  computed: {
+    ...mapState[
+      {
+        card: (state) => state.card,
+        list: (state) => state.list,
+      }
+    ],
   },
   filters: {
     plusMessageFilter: (carditem) =>
@@ -56,15 +61,10 @@ export default {
     };
   },
   methods: {
-    addCard() {
-      this.carditem.push({
-        id: new Date().getTime(),
-        message: "",
-        list: this.listItem.id,
-        order: this.carditem.length,
-      });
-      this.changeEvent();
-    },
+    ...mapActions({
+      addCard: "card/pushCardToList",
+    }),
+
     removeCard(item) {
       this.$emit("remove-card", item);
     },
@@ -94,10 +94,6 @@ export default {
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("dragItem", item.id);
       e.dataTransfer.setData("target", e.target);
-    },
-
-    changeBoardTitle(title) {
-      this.$emit("change-board-title", title);
     },
   },
 };

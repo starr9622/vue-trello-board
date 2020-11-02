@@ -1,18 +1,21 @@
 <template>
   <footer>
     <label>change background Color</label>
-    <input type="color" :value="color" @input="changeColor" />
+    <input
+      type="color"
+      :value="color"
+      @input="(e) => changeBackgroundColor(e.target.value)"
+    />
   </footer>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   props: ["color"],
 
   methods: {
-    changeColor($event) {
-      this.$store.commit("setBgColor", $event.target.value);
-    },
+    ...mapActions("setting", ["changeBackgroundColor"]),
   },
 };
 </script>

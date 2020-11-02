@@ -1,5 +1,5 @@
 <template>
-  <div class="button-wrap" @click="addlist()">
+  <div class="button-wrap" @click="addlist">
     <span class="plus">{{ message }}</span>
   </div>
 </template>

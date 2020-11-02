@@ -1,8 +1,8 @@
 <template>
-  <div class="main-wrap" :style="{ 'background-color': setting.color }">
-    <main-title :title="setting.title"></main-title>
+  <div class="main-wrap" :style="{ 'background-color': color }">
+    <main-title :title="title"></main-title>
     <main-area></main-area>
-    <change-background :color="setting.color"></change-background>
+    <change-background :color="color"></change-background>
   </div>
 </template>
 
@@ -15,7 +15,10 @@ export default {
     "change-background": () => import("./Footer/changeBg"),
     "main-title": () => import("./Header/Title"),
   },
-  computed: mapState(["setting"]),
+  computed: mapState({
+    title: (state) => state.setting.title,
+    color: (state) => state.setting.color,
+  }),
 };
 </script>
 

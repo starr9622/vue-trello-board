@@ -4,30 +4,36 @@
       v-for="(item, index) in list"
       :key="item.id"
       :listItem="list[index]"
-      :cardList="item.id | cardFilter(card)"
-      @remove-list="removeList(item.id)"
+      :cardList="cardList(item.id)"
       @change-order="changeOrder"
       @change-card="cardHandler"
       @remove-card="cardRemove"
-      @change-board-title="(title) => titleChange(item.id, title)"
     ></board>
-    <add-button
-      :message="list | messageFilter"
-      @addEvent="addlist"
-    ></add-button>
+    <add-button :message="message" @addEvent="addList"></add-button>
   </div>
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from "vuex";
+
 export default {
   components: {
     board: () => import("./board.vue"),
     addButton: () => import("../Button/Add"),
   },
+  computed: {
+    ...mapState({
+      card: (state) => state.card.all,
+      list: (state) => state.list.all,
+    }),
+    ...mapGetters({
+      message: "list/buttonMessage",
+      cardList: "card/listCardFilter",
+    }),
+  },
   filters: {
     cardFilter: (id, card) =>
       card.filter((c) => c.list === id).sort((a, b) => a.order - b.order),
-    messageFilter: (list) => (list.length ? "Add another list" : "Add a list"),
   },
   watch: {
     orderSort() {
@@ -37,21 +43,13 @@ export default {
   },
   data() {
     return {
-      list: [],
-      card: [],
       orderSort: false,
     };
   },
   methods: {
-    addlist() {
-      this.list.push({
-        id: new Date().getTime(),
-        boardTitle: "new List !",
-      });
-    },
-    removeList(id) {
-      this.list = this.list.filter((item) => item.id != id);
-    },
+    ...mapActions({
+      addList: "list/pushList",
+    }),
     changeOrder(item) {
       const changeList = parseInt(item.list);
       if (item.order === -1 && this.card.find((c) => c.list === changeList)) {
@@ -101,11 +99,6 @@ export default {
         card.order = index;
       });
       this.orderSort = false;
-    },
-
-    titleChange(id, title) {
-      let board = this.list.find((b) => b.id === id);
-      board.boardTitle = title;
     },
   },
 };

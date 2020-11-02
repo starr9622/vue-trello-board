@@ -1,20 +1,23 @@
 <template>
   <div class="title">
-    <input type="text" :value="boardTitle" @input="changeBoardTitle" />
-    <div class="remove-btn" @click="removeList">🗑</div>
+    <input
+      type="text"
+      :value="board.title"
+      @input="(e) => titleChange({ id: board.id, title: e.target.value })"
+    />
+    <div class="remove-btn" @click="removeList(board.id)">🗑</div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
-  props: ["boardTitle"],
+  props: ["board"],
   methods: {
-    changeBoardTitle($event) {
-      this.$emit("change-board-title", $event.target.value);
-    },
-    removeList() {
-      this.$emit("remove-list");
-    },
+    ...mapActions({
+      titleChange: "list/titleChange",
+      removeList: "list/removeList",
+    }),
   },
 };
 </script>

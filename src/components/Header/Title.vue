@@ -1,16 +1,20 @@
 <template>
   <header>
-    <input type="text" :value="title" @input="changeTitle" />
+    <input
+      type="text"
+      :value="title"
+      @input="(e) => changeTitle(e.target.value)"
+    />
   </header>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   props: ["title"],
   methods: {
-    changeTitle($event) {
-      this.$store.commit("setTitle", $event.target.value);
-    },
+    ...mapActions("setting", ["changeTitle"]),
   },
 };
 </script>
