@@ -21,6 +21,7 @@ export default {
 footer {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 0.5rem;
+  text-align: center;
   label {
     margin-right: 1rem;
     color: #666;

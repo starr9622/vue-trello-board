@@ -21,6 +21,7 @@ header {
   padding: 0.5rem;
   background: rgba(0, 0, 0, 0.1);
   input {
+    font-weight: 200;
     font-size: 1.5rem;
     text-align: center;
     color: #fff;

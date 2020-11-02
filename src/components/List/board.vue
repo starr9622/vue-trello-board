@@ -1,9 +1,10 @@
 <template>
-  <div class="list bg-ececec box-shadow">
-    <div class="title p-relative d-flex">
-      <input type="text" v-model="title" @input="changeBoardTitle" />
-      <div class="close pointer" @click="removeList()">🗑</div>
-    </div>
+  <div class="board">
+    <list-title
+      :boardTitle="listItem.boardTitle"
+      @change-board-title="(v) => changeBoardTitle(v)"
+      @remove-list="removeList"
+    ></list-title>
     <div
       @drop="dropHandler(-1, $event)"
       @dragover.prevent
@@ -25,9 +26,10 @@
         ></card>
       </div>
     </div>
-    <div class="addCard pointer" @click="addCard()">
-      <span class="plus">{{ carditem | plusMessageFilter }}</span>
-    </div>
+    <add-button
+      :message="carditem | plusMessageFilter"
+      @addEvent="addCard"
+    ></add-button>
   </div>
 </template>
 
@@ -36,6 +38,8 @@ export default {
   props: ["listItem", "cardList"],
   components: {
     card: () => import("../Card/Card"),
+    addButton: () => import("../Button/Add"),
+    listTitle: () => import("./ListTitle"),
   },
   filters: {
     plusMessageFilter: (carditem) =>
@@ -48,7 +52,6 @@ export default {
   },
   data() {
     return {
-      title: this.listItem.boardTitle,
       carditem: this.cardList,
     };
   },
@@ -93,14 +96,20 @@ export default {
       e.dataTransfer.setData("target", e.target);
     },
 
-    changeBoardTitle() {
-      this.$emit("change-board-title", this.title);
+    changeBoardTitle(title) {
+      this.$emit("change-board-title", title);
     },
   },
 };
 </script>
 
 <style scoped>
+.board {
+  border-radius: 0.25rem;
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.1);
+  background-color: #ececec;
+}
+
 .cardDropZone {
   padding: 0.5rem;
 }
