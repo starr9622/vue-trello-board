@@ -6,7 +6,10 @@
       :listItem="list[index]"
       :cardList="cardList(item.id)"
     ></board>
-    <add-button :message="message" @addEvent="pushList"></add-button>
+    <add-button
+      :message="list.length | message('list')"
+      @addEvent="pushList"
+    ></add-button>
   </div>
 </template>
 
@@ -24,7 +27,6 @@ export default {
       list: (state) => state.list.all,
     }),
     ...mapGetters({
-      message: "list/buttonMessage",
       cardList: "card/listCardFilter",
     }),
   },

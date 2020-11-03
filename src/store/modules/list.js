@@ -24,11 +24,7 @@ const actions = {
     commit("CHANGE", { id: list.id, title: list.title });
   },
 };
-const getters = {
-  buttonMessage: function(state) {
-    return state.all.length ? "Add another list" : "Add a list";
-  },
-};
+const getters = {};
 
 export default {
   namespaced: true,

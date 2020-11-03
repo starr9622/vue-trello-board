@@ -19,14 +19,14 @@
       </div>
     </div>
     <add-button
-      :message="message(listItem.id)"
+      :message="cardList.length | message('card')"
       @addEvent="pushCardToList(listItem.id)"
     ></add-button>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   props: ["listItem", "cardList"],
   components: {
@@ -34,9 +34,6 @@ export default {
     addButton: () => import("../Button/Add"),
     listTitle: () => import("./ListTitle"),
   },
-  computed: mapGetters({
-    message: "card/buttonMessage",
-  }),
   methods: mapActions("card", [
     "pushCardToList",
     "dragStartHandler",

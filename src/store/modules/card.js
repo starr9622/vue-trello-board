@@ -7,11 +7,6 @@ const getters = {
     state.all
       .filter((card) => card.list === id)
       .sort((a, b) => a.order - b.order),
-  buttonMessage: (state) => (id) => {
-    return state.all.filter((card) => card.list === id).length
-      ? "Add another card"
-      : "Add a card";
-  },
 };
 
 const mutations = {
