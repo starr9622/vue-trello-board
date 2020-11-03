@@ -13,12 +13,7 @@
 import { mapActions } from "vuex";
 export default {
   props: ["board"],
-  methods: {
-    ...mapActions({
-      titleChange: "list/titleChange",
-      removeList: "list/removeList",
-    }),
-  },
+  methods: mapActions("list", ["titleChange", "removeList"]),
 };
 </script>
 

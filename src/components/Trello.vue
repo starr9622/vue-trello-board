@@ -15,10 +15,7 @@ export default {
     "change-background": () => import("./Footer/changeBg"),
     "main-title": () => import("./Header/Title"),
   },
-  computed: mapState({
-    title: (state) => state.setting.title,
-    color: (state) => state.setting.color,
-  }),
+  computed: mapState("setting", ["title", "color"]),
 };
 </script>
 

@@ -13,9 +13,7 @@ import { mapActions } from "vuex";
 
 export default {
   props: ["title"],
-  methods: {
-    ...mapActions("setting", ["changeTitle"]),
-  },
+  methods: mapActions("setting", ["changeTitle"]),
 };
 </script>
 

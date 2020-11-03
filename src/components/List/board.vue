@@ -2,35 +2,31 @@
   <div class="board">
     <list-title :board="listItem"></list-title>
     <div
-      @drop="dropHandler(-1, $event)"
+      class="cardDropZone"
+      @drop="dropHandler({ order: -1, list: listItem.id })"
       @dragover.prevent
       @dragenter.prevent
-      class="cardDropZone"
     >
       <div
         class="itemHandler"
-        v-for="(item, index) in carditem"
+        v-for="(item, index) in cardList"
         :key="item.id"
         draggable="true"
-        @dragstart="dragStartHandler($event, item)"
-        @drop="dropHandler(index, $event)"
+        @dragstart="dragStartHandler(item)"
+        @drop="dropHandler({ order: index, list: listItem.id })"
       >
-        <card
-          @remove-card="removeCard(item)"
-          :todo-message="carditem[index].message"
-          @change-card="(v) => changeCard(v, index)"
-        ></card>
+        <card :card="cardList[index]"></card>
       </div>
     </div>
     <add-button
-      :message="carditem | plusMessageFilter"
-      @addEvent="addCard(listItem.id)"
+      :message="message(listItem.id)"
+      @addEvent="pushCardToList(listItem.id)"
     ></add-button>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["listItem", "cardList"],
   components: {
@@ -38,64 +34,14 @@ export default {
     addButton: () => import("../Button/Add"),
     listTitle: () => import("./ListTitle"),
   },
-  computed: {
-    ...mapState[
-      {
-        card: (state) => state.card,
-        list: (state) => state.list,
-      }
-    ],
-  },
-  filters: {
-    plusMessageFilter: (carditem) =>
-      carditem.length ? "Add another card" : "Add a card",
-  },
-  watch: {
-    cardList: function () {
-      this.carditem = this.cardList;
-    },
-  },
-  data() {
-    return {
-      carditem: this.cardList,
-    };
-  },
-  methods: {
-    ...mapActions({
-      addCard: "card/pushCardToList",
-    }),
-
-    removeCard(item) {
-      this.$emit("remove-card", item);
-    },
-    removeList() {
-      this.$emit("remove-list");
-    },
-    changeEvent() {
-      this.$emit("change-card", this.carditem);
-    },
-    changeCard(val, index) {
-      this.carditem[index] = {
-        ...this.carditem[index],
-        message: val,
-      };
-      this.changeEvent();
-    },
-    dropHandler(to, e) {
-      this.$emit("change-order", {
-        card: e.dataTransfer.getData("dragItem"),
-        list: this.listItem.id,
-        order: to,
-      });
-    },
-
-    dragStartHandler(e, item) {
-      e.dataTransfer.dropEffect = "move";
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("dragItem", item.id);
-      e.dataTransfer.setData("target", e.target);
-    },
-  },
+  computed: mapGetters({
+    message: "card/buttonMessage",
+  }),
+  methods: mapActions("card", [
+    "pushCardToList",
+    "dragStartHandler",
+    "dropHandler",
+  ]),
 };
 </script>
 

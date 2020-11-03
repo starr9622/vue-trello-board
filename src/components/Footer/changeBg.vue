@@ -13,10 +13,7 @@
 import { mapActions } from "vuex";
 export default {
   props: ["color"],
-
-  methods: {
-    ...mapActions("setting", ["changeBackgroundColor"]),
-  },
+  methods: mapActions("setting", ["changeBackgroundColor"]),
 };
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="button-wrap" @click="addlist">
+  <div class="button-wrap" @click="() => this.$emit('addEvent')">
     <span class="plus">{{ message }}</span>
   </div>
 </template>
@@ -7,11 +7,6 @@
 <script>
 export default {
   props: ["message"],
-  methods: {
-    addlist() {
-      this.$emit("addEvent");
-    },
-  },
 };
 </script>
 

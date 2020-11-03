@@ -2,31 +2,20 @@
   <div class="card-wrap">
     <textarea
       ref="textArea"
-      v-model="message"
-      @input="cardinput"
+      :value="card.message"
+      @input="(e) => changeCard({ ...card, message: e.target.value })"
       placeholder="Write a to do!"
     ></textarea>
-    <div class="close" @click="remove">❌</div>
+    <div class="close" @click="removeCard({ ...card })">❌</div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
-  props: ["todoMessage"],
-  data() {
-    return {
-      textareaHeight: "1rem",
-      message: this.todoMessage,
-    };
-  },
-  methods: {
-    remove() {
-      return this.$emit("remove-card", this);
-    },
-    cardinput() {
-      this.$emit("change-card", this.message);
-    },
-  },
+  props: ["card"],
+  methods: mapActions("card", ["removeCard", "changeCard"]),
 };
 </script>
 
