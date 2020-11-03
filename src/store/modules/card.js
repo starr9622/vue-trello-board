@@ -7,6 +7,7 @@ const getters = {
     state.all
       .filter((card) => card.list === id)
       .sort((a, b) => a.order - b.order),
+  getCard: (state) => (id) => state.all.find((card) => card.id === id),
 };
 
 const mutations = {
@@ -22,8 +23,15 @@ const mutations = {
     card.message = payload.message;
     card.order = payload.order;
   },
-  ORDER(state, payload) {
-    state.all.filter((card) => card.list === payload.list);
+  ORDER(state, { list }) {
+    let cardIds = state.all
+      .filter((c) => c.list === list)
+      .sort((a, b) => a.order - b.order)
+      .map((f) => f.id);
+    cardIds.forEach((id, index) => {
+      let card = state.all.find((c) => c.id === id);
+      card.order = index;
+    });
   },
   DRAG(state, payload) {
     state.dragItem = payload;
@@ -31,12 +39,12 @@ const mutations = {
 };
 
 const actions = {
-  pushCardToList({ state, commit }, listId) {
+  pushCardToList({ getters, commit }, listId) {
     commit("PUSH", {
       id: new Date().getTime(),
       message: "",
       list: listId,
-      order: state.all.filter((card) => card.list === listId).length,
+      order: getters.listCardFilter(listId).length,
     });
   },
   removeCard({ commit }, card) {
@@ -53,13 +61,38 @@ const actions = {
   dragStartHandler({ commit }, card) {
     commit("DRAG", card);
   },
-  dropHandler({ commit, state }, card) {
-    commit("CHANGE", {
-      id: state.dragItem.id,
-      list: card.list,
-      message: state.dragItem.message,
-      order: card.order,
+  dropHandler({ commit, getters, state }, card) {
+    let existInList = getters
+      .listCardFilter(card.list)
+      .find((card) => card.id === state.dragItem.id);
+    if (card.order === -1 && existInList) return;
+
+    let moveItem = getters.getCard(state.dragItem.id);
+    let listIds = getters.listCardFilter(card.list).map((f) => f.id);
+    if (moveItem.list !== card.list) {
+      moveItem.list = card.list;
+      moveItem.order = listIds.length - 1;
+    }
+    listIds.forEach((id) => {
+      let orderItem = getters.getCard(id);
+      let order =
+        moveItem.order > card.order && orderItem.order >= card.order
+          ? orderItem.order + 1
+          : orderItem.order <= card.order
+          ? orderItem.order - 1
+          : orderItem.order;
+      commit("CHANGE", {
+        ...orderItem,
+        order: order,
+      });
     });
+    moveItem.order = card.order;
+    commit("CHANGE", {
+      ...moveItem,
+    });
+
+    commit("ORDER", { list: card.list });
+    commit("ORDER", { list: state.dragItem.list });
   },
 };
 
