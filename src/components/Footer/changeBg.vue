@@ -27,7 +27,6 @@ footer {
     color: #666;
   }
 }
-
 input {
   border: 0;
   background: transparent;

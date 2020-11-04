@@ -1,6 +1,6 @@
 <template>
   <div class="main-wrap" :style="{ 'background-color': color }">
-    <main-title :title="title"></main-title>
+    <main-title></main-title>
     <main-area></main-area>
     <change-background :color="color"></change-background>
   </div>
@@ -12,10 +12,10 @@ export default {
   name: "trello",
   components: {
     "main-area": () => import("./Main/Boards"),
-    "change-background": () => import("./Footer/changeBg"),
+    "change-background": () => import("./Footer/ChangeBg"),
     "main-title": () => import("./Header/Title"),
   },
-  computed: mapState("setting", ["title", "color"]),
+  computed: mapState("setting", ["color"]),
 };
 </script>
 

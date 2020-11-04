@@ -9,10 +9,10 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
-  props: ["title"],
+  computed: mapState("setting", ["title"]),
   methods: mapActions("setting", ["changeTitle"]),
 };
 </script>
