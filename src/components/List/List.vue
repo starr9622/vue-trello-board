@@ -18,7 +18,7 @@ import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
-    board: () => import("./board.vue"),
+    board: () => import("./Board"),
     addButton: () => import("../Button/Add"),
   },
   computed: {

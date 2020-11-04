@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "lodash": "^4.17.20",
     "vue": "^2.6.11",
     "vuex": "^3.4.0"
   },
@@ -52,24 +53,24 @@
     "not dead"
   ],
   "jest": {
-  "moduleFileExtensions": [
-    "js",
-    "jsx",
-    "json",
-    "vue"
-  ],
-  "moduleNameMapper": {
-    "^~/(.*)$": "<rootDir>/src/$1",
-    "^@/(.*)$": "<rootDir>/src/$1"
-  },
-  "modulePathIgnorePatterns": [
-    "<rootDir>/node_modules",
-    "<rootDir>/build",
-    "<rootDir>/dist"
-  ],
-  "transform": {
-    "^.+\\.vue$": "vue-jest",
-    "^.+\\.jsx?$": "babel-jest"
-  }
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "vue"
+    ],
+    "moduleNameMapper": {
+      "^~/(.*)$": "<rootDir>/src/$1",
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/node_modules",
+      "<rootDir>/build",
+      "<rootDir>/dist"
+    ],
+    "transform": {
+      "^.+\\.vue$": "vue-jest",
+      "^.+\\.jsx?$": "babel-jest"
+    }
   }
 }

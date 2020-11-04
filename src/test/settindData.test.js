@@ -35,6 +35,7 @@ describe("title.test.js 데이터 변경 테스트", () => {
     const input = wrapper.find('input[type="text"]');
     input.element.value = "test";
     input.trigger("input");
+
     expect(state.title).toBe("test");
   });
 });
@@ -51,10 +52,12 @@ describe("ChangeBg.test.js 데이터 변경 테스트", () => {
       changeBackgroundColor: jest.fn(),
     };
     store = new Vuex.Store({
-      setting: {
-        ...setting,
-        state,
-        actions,
+      modules: {
+        setting: {
+          ...setting,
+          state,
+          actions,
+        },
       },
     });
   });
@@ -63,17 +66,15 @@ describe("ChangeBg.test.js 데이터 변경 테스트", () => {
     const wrapper = shallowMount(ChangeBg, {
       propsData: { color: state.color },
     });
-    let color = wrapper.find('input[type="color"]');
+    const color = wrapper.find('input[type="color"]');
     expect(color.element.value).toBe("#f1f1f1");
   });
 
   it("color 이벤트 송신 확인", () => {
     const wrapper = shallowMount(ChangeBg, { store, localVue });
-    let color = wrapper.find("input");
+    const color = wrapper.find('input[type="color"]');
     color.element.value = "#ffffff";
     color.trigger("input");
-    expect(color.element.value).toBe("#ffffff");
-
-    // expect(actions.changeBackgroundColor).toHaveBeenCalled();
+    expect(actions.changeBackgroundColor).toHaveBeenCalled();
   });
 });
